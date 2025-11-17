@@ -1,24 +1,34 @@
 using System.Collections;
+using Unity.XR.GoogleVr;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    [Header("Movement Settings")]
     [SerializeField] private float speed = 5f;
+    [SerializeField] private int facingDirection = 1;
+
+    [Header("Reference Settings")]
     Rigidbody2D rb;
     PlayerController controller;
     Vector2 movement;
     Animator animator;
-    [SerializeField] private int facingDirection = 1;
+    private EnemyHealth enemyHealth;
+    [SerializeField] TrailRenderer trailRenderer;
+
+    [Header("AttackReferences")]
     [SerializeField] Transform attackPoint;
     [SerializeField] private float attackRange = 0.5f;
     public LayerMask enemyLayer;
-    private EnemyHealth enemyHealth;
+
+    [Header("Dash Settings")]
     [SerializeField] private float dashSpeed = 7f;
     [SerializeField] private float dashDuration = 0.05f;
     [SerializeField] private float dashCoolDown = 3f;
     bool isDashing = false;
     bool canDash = true;
-    [SerializeField] TrailRenderer trailRenderer;
+    bool dashPressed = false;
+    
 
     void Awake()
     {
@@ -27,7 +37,7 @@ public class PlayerMovement : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
         controller = new PlayerController();
         MovementCalling();
-        trailRenderer = GetComponentInChildren<TrailRenderer>();
+        Dashing();
     }
 
     void MovementCalling()
@@ -36,6 +46,14 @@ public class PlayerMovement : MonoBehaviour
         controller.Player.Move.canceled += ctx => movement = Vector2.zero;
     }
 
+    void Dashing()
+    {
+        controller.Player.Dash.performed += ctx => dashPressed = true;
+        {
+            Debug.Log("Button Pressed");
+        };
+        
+    }
 
     private void OnEnable()
     {
@@ -49,12 +67,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        if(isDashing)
-        {
-            return;
-        }
-
-        if(movement.x >0 && transform.localScale.x <0 || movement.x <0 && transform.localScale.x >0)
+        
+        if (movement.x > 0 && transform.localScale.x < 0 || movement.x < 0 && transform.localScale.x > 0)
         {
             Flip();
         }
@@ -66,15 +80,14 @@ public class PlayerMovement : MonoBehaviour
         {
             return;
         }
-        else
-        {
-            Move();
-            Attack();
-        }
+         Move();
+         Attack();
 
-        if(Input.GetKeyDown(KeyCode.Q))
+        if(canDash == true && dashPressed == true)
         {
+            dashPressed = false;
             StartCoroutine(Dash());
+            Debug.Log("Started Dashing");
         }
     }
 
@@ -90,12 +103,12 @@ public class PlayerMovement : MonoBehaviour
 
     void Attack()
     {
-        if(Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0))
         {
             animator.SetTrigger("Attack");
             Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayer);
 
-            foreach(Collider2D hit in hitEnemies)
+            foreach (Collider2D hit in hitEnemies)
             {
                 enemyHealth.TakeDamage(10);
                 Debug.Log("Damage done to enemy ");
@@ -112,15 +125,18 @@ public class PlayerMovement : MonoBehaviour
     IEnumerator Dash()
     {
         isDashing = true;
-        rb.linearVelocity = new Vector2(movement.x * dashSpeed, movement.y * dashSpeed);
+        canDash = false;
+        rb.AddForce(movement * dashSpeed, ForceMode2D.Impulse);
         yield return new WaitForSeconds(dashDuration);
+        rb.linearVelocity = Vector2.zero;
         isDashing = false;
+        yield return new WaitForSeconds(dashCoolDown);
+        canDash = true;
     }
 
     private void OnDrawGizmos()
     {
-
-        if(attackPoint == null)
+        if (attackPoint == null)
         {
             return;
         }

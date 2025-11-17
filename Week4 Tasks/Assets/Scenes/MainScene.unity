@@ -985,15 +985,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   speed: 5
   facingDirection: 1
+  trailRenderer: {fileID: 1714884645}
   attackPoint: {fileID: 279969271}
-  attackRange: 0.13
+  attackRange: 0.14
   enemyLayer:
     serializedVersion: 2
     m_Bits: 128
-  dashSpeed: 4
-  dashDuration: 0.02
+  dashSpeed: 20
+  dashDuration: 0.8
   dashCoolDown: 3
-  trailRenderer: {fileID: 1714884645}
 --- !u!114 &1714884641
 MonoBehaviour:
   m_ObjectHideFlags: 0

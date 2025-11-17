@@ -12,8 +12,6 @@ public class Enemy : MonoBehaviour
     [SerializeField] float attackRange = 2;
     public LayerMask playerLayer;
     
-
-
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -48,7 +46,6 @@ public class Enemy : MonoBehaviour
 
     }
 
-
     void Chase()
     {
         animator.SetBool("isRunning", true);
@@ -61,7 +58,6 @@ public class Enemy : MonoBehaviour
         facingDirection *= -1;
         transform.localScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, transform.localScale.z);
     }
-
 
     void Attack()
     {
@@ -81,7 +77,6 @@ public class Enemy : MonoBehaviour
             isChasing = true;
         }
     }
-
 
     private void OnTriggerExit2D(Collider2D other)
     {
