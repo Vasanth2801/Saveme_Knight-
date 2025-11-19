@@ -1,10 +1,11 @@
+using NUnit.Framework.Internal.Commands;
 using System.Collections;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
     [Header("Movement Settings")]
-    [SerializeField] private float speed = 5f;
+    public float speed = 5f;
     [SerializeField] private int facingDirection = 1;
 
     [Header("Reference Settings")]
@@ -18,6 +19,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] Transform attackPoint;
     [SerializeField] private float attackRange = 0.5f;
     public LayerMask enemyLayer;
+    public int attackDamage = 10;
 
     [Header("Dash Settings")]
     [SerializeField] private float dashSpeed = 7f;
@@ -31,7 +33,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float knockBackForce = 8f;
     [SerializeField] private float knockBackDuration = 0.1f;
     bool isKnocked = false;
-    
+
+    [Header("Powerup Settings")]
+    public DamagePowerup powerupEffect;
+
 
     void Awake()
     { 
@@ -74,6 +79,11 @@ public class PlayerMovement : MonoBehaviour
         {
             Flip();
         }
+
+        if(Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            ActivateCurrentPower();
+        }
     }
 
     private void FixedUpdate()
@@ -115,10 +125,9 @@ public class PlayerMovement : MonoBehaviour
                 var eh = hit.GetComponent<EnemyHealth>();
                 if (eh != null)
                 {
-                    eh.TakeDamage(10);
+                    eh.TakeDamage(attackDamage);
                     Debug.Log("Damage done to enemy ");
                 }
-                
             }
         }
     }
@@ -169,5 +178,41 @@ public class PlayerMovement : MonoBehaviour
         yield return new WaitForSeconds(knockBackDuration);
         rb.linearVelocity = Vector2.zero;
         isKnocked = false;
+    }
+
+    public void ApplyPowerup(SpeedPowerup speedPowerup)
+    {
+        speedPowerup.ApplyPowerup(this.gameObject);
+
+        var TimePowerup = speedPowerup as TimePowerup;
+
+        if(TimePowerup != null)
+        {
+            StartCoroutine(TimePowerup.PowerupDuration(gameObject));
+        }
+    }
+
+    public void ApplyPowerup(DamagePowerup damagePowerup)
+    {
+        damagePowerup.ApplyPowerup(this.gameObject);
+        var TimePowerup = damagePowerup as DamagaeTime;
+        if (TimePowerup != null)
+        {
+            StartCoroutine(TimePowerup.DamageDuration(gameObject));
+        }
+    }
+
+    public void StorePowerup(DamagePowerup effect)
+    {
+        powerupEffect = effect;
+    }
+
+    void ActivateCurrentPower()
+    {
+        if(powerupEffect != null)
+        {
+            ApplyPowerup(powerupEffect);
+            powerupEffect = null;
+        }
     }
 }

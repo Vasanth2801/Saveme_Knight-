@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7abfe45bc22a944ab4cc474eee14709, type: 3}
+  m_Name: DamageItem
+  m_EditorClassIdentifier: Assembly-CSharp::Shop
+  itemName: Damage Dealer
+  itemIcon: {fileID: 5594145062663716712, guid: 8a799f46a1d76994dad209b4d52c70d6, type: 3}
+  itemPrice: 30
+  itemDescription: 'This does extra damage to the enemy for a certian amount of time '
