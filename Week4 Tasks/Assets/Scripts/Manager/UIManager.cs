@@ -1,5 +1,7 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
+
 
 public class UIManager : MonoBehaviour
 {
@@ -7,6 +9,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI killText;
     [SerializeField] private int killCount;
     public EnemyKillState enemyState = new EnemyKillState();
+    public static bool isGamePaused = false;
+    public GameObject pauseMenuUI;
 
     private void Awake()
     {
@@ -25,6 +29,35 @@ public class UIManager : MonoBehaviour
     {
         killCount = 0;
         killText.text = "KillCount: " + killCount;
+    }
+
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            if(isGamePaused)
+            {
+                Resume();
+            }
+            else
+            {
+                Pause();
+            }
+        }
+    }
+    
+    public void Resume()
+    {
+        pauseMenuUI.SetActive(false);
+        Time.timeScale = 1f;
+        isGamePaused = false;
+    }
+
+    void Pause()
+    {
+        pauseMenuUI.SetActive(true);
+        Time.timeScale = 0f;
+        isGamePaused = true;
     }
 
     public void AddKill()
@@ -79,5 +112,22 @@ public class UIManager : MonoBehaviour
     public void DeleteData()
     {
         DataManager.instance.DeleteFromJson();
+    }
+
+    public void Restart()
+    {
+        SceneManager.LoadScene(1);
+        Time.timeScale = 1f;
+    }
+
+    public void MainMenu()
+    {
+        SceneManager.LoadScene(0);
+        Time.timeScale = 1f;
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
     }
 }

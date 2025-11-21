@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.IO;
 
 public class GameManager : MonoBehaviour
 {
@@ -26,7 +27,32 @@ public class GameManager : MonoBehaviour
 
     public void LoadGame()
     {
-        noLoadData.SetActive(true);
+        string filePath = Application.persistentDataPath + "/KillState";
+
+        
+        if (File.Exists(filePath))
+        {
+            if (DataManager.instance == null)
+            {
+                GameObject dm = new GameObject("DataManager");
+                dm.AddComponent<DataManager>();
+            }
+
+            if (UIManager.instance != null)
+            {
+                UIManager.instance.LoadData();
+                SceneManager.LoadScene(1);
+            }
+            else
+            {
+                DataManager.instance.LoadFromJson();
+                SceneManager.LoadScene(1);
+            }
+        }
+        else
+        {
+            noLoadData.SetActive(true);
+        }
     }
 
     public void Quit()
