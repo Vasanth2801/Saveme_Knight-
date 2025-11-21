@@ -34,5 +34,4 @@ public class BossRun : StateMachineBehaviour
     {
         animator.ResetTrigger("Attack");
     }
-
 }

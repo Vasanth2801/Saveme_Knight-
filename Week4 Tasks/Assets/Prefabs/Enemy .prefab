@@ -160,7 +160,7 @@ GameObject:
   - component: {fileID: 8671486501861703848}
   m_Layer: 7
   m_Name: 'Enemy '
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -271,7 +271,7 @@ MonoBehaviour:
   speed: 2
   facingDirection: 1
   attackPoint: {fileID: 9206359396439669047}
-  attackRange: 0.16
+  attackRange: 1.09
   playerLayer:
     serializedVersion: 2
     m_Bits: 64

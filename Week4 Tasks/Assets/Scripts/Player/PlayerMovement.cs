@@ -36,7 +36,10 @@ public class PlayerMovement : MonoBehaviour
     [Header("Powerup Settings")]
     public DamagePowerup powerupEffect;
 
-   
+    [Header("RangedSettings")]
+    [SerializeField] Transform firePoint;
+    [SerializeField] int rangedAttackDamage = 5;
+
     void Awake()
     { 
         rb = GetComponent<Rigidbody2D>();
@@ -47,7 +50,6 @@ public class PlayerMovement : MonoBehaviour
     }
 
    
-
     void MovementCalling()
     {
         controller.Player.Move.performed += ctx => movement = ctx.ReadValue<Vector2>();
@@ -82,6 +84,11 @@ public class PlayerMovement : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.LeftShift))
         {
             ActivateCurrentPower();
+        }
+
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            Shoot();
         }
     }
 
@@ -138,10 +145,19 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    void  Shoot()
+    {
+        ObjectPooler.Instance.SpawnObjects("Projectile", firePoint.position, firePoint.rotation);
+    }
+
     void Flip()
     {
         facingDirection *= -1;
         transform.localScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, transform.localScale.z);
+        if(firePoint != null)
+        {
+            firePoint.Rotate(0, 180, 0);
+        }
     }
 
     IEnumerator Dash()
