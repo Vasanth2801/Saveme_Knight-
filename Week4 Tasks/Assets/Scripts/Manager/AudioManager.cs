@@ -7,7 +7,6 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioSource sfxSource;
     [SerializeField] private AudioClip bgMusic;
 
-
     void Awake()
     {
         if (Instance == null)

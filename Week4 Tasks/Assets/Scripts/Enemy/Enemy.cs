@@ -71,7 +71,10 @@ public class Enemy : MonoBehaviour
         {
             Vector2 pushDir = (player.position - transform.position);
             player.GetComponent<PlayerMovement>().KnockBack(pushDir);
-            Debug.Log("Attacked Player");
+            if(player != null)
+            {
+                player.GetComponent<PlayerHealth>().PlayerDamage(1);
+            }
         }
     }
 

@@ -6,11 +6,12 @@ using UnityEngine.SceneManagement;
 public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
-    [SerializeField] private TextMeshProUGUI killText;
-    [SerializeField] private int killCount;
+   // [SerializeField] private TextMeshProUGUI killText;
+   // [SerializeField] private int killCount;
     public EnemyKillState enemyState = new EnemyKillState();
     public static bool isGamePaused = false;
     public GameObject pauseMenuUI;
+    public GameObject gameOverMenu;
 
     private void Awake()
     {
@@ -27,8 +28,8 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
-        killCount = 0;
-        killText.text = "KillCount: " + killCount;
+     //   killCount = 0;
+       // killText.text = "KillCount: " + killCount;
     }
 
     private void Update()
@@ -62,14 +63,14 @@ public class UIManager : MonoBehaviour
 
     public void AddKill()
     {
-        killCount++;
+     //   killCount++;
         DataManager.instance.enemyState.killCount += 1;
         UpdateUI();
     }
 
     public void SetKillCount(int count)
     {
-        killCount = count;
+        //  killCount = count;
         if(DataManager.instance != null)
         {
             DataManager.instance.enemyState.killCount = count;
@@ -78,7 +79,7 @@ public class UIManager : MonoBehaviour
 
     void UpdateUI()
     {
-        killText.text = "KillCount: " + killCount.ToString();
+        //  killText.text = "KillCount: " + killCount.ToString();
     }
 
     public void SaveData()
@@ -99,7 +100,7 @@ public class UIManager : MonoBehaviour
         if(DataManager.instance != null)
         {
             DataManager.instance.LoadFromJson();
-            killText.text = "KillCount: " + DataManager.instance.enemyState.killCount;
+          //  killText.text = "KillCount: " + DataManager.instance.enemyState.killCount;
             SetKillCount(DataManager.instance.enemyState.killCount);
         }
         else
@@ -124,6 +125,12 @@ public class UIManager : MonoBehaviour
     {
         SceneManager.LoadScene(0);
         Time.timeScale = 1f;
+    }
+
+    public void GameOver()
+    {
+        gameOverMenu.SetActive(true);
+        Time.timeScale = 0f;
     }
 
     public void QuitGame()
