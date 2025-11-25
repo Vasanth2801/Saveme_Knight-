@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class Enemy : MonoBehaviour
 {
@@ -14,6 +15,10 @@ public class Enemy : MonoBehaviour
     [SerializeField] Transform attackPoint;
     [SerializeField] float attackRange = 2;
     public LayerMask playerLayer;
+
+    [Header("Attack Settings")]
+    [SerializeField] private float attackCooldown = 1f;
+    private bool isAttacking = false;
     
     private void Awake()
     {
@@ -24,6 +29,11 @@ public class Enemy : MonoBehaviour
 
     private void Update()
     {
+        if (player == null) 
+        { 
+            return; 
+        }
+
         float distance = Vector2.Distance(player.position,transform.position);
 
         if(distance <= attackRange)
@@ -31,7 +41,12 @@ public class Enemy : MonoBehaviour
             isChasing = false;
             rb.linearVelocity = Vector2.zero;
             animator.SetBool("isRunning", false);
-            Attack();
+
+            if (!isAttacking)
+            {
+                StartCoroutine(AttackCoroutine());
+            }
+
             return;
         }
 
@@ -62,6 +77,31 @@ public class Enemy : MonoBehaviour
         transform.localScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, transform.localScale.z);
     }
 
+    IEnumerator AttackCoroutine()
+    {
+        isAttacking = true;
+
+        while (true)
+        {
+            if (player == null)
+            {
+                break;
+            }
+
+            float distance = Vector2.Distance(player.position, transform.position);
+            if (distance > attackRange)
+            {
+                break;
+            }
+
+            Attack();
+
+            yield return new WaitForSeconds(attackCooldown);
+        }
+
+        isAttacking = false;
+    }
+
     void Attack()
     {
         animator.SetTrigger("Attack");   
@@ -69,11 +109,22 @@ public class Enemy : MonoBehaviour
 
         foreach(Collider2D hitCollider in hitPlayer)
         {
+            if(player == null)
+            { 
+                continue; 
+            }
+
             Vector2 pushDir = (player.position - transform.position);
-            player.GetComponent<PlayerMovement>().KnockBack(pushDir);
-            if(player != null)
+            PlayerMovement pm = player.GetComponent<PlayerMovement>();
+            if (pm != null)
             {
-                player.GetComponent<PlayerHealth>().PlayerDamage(1);
+                pm.KnockBack(pushDir);
+            }
+
+            PlayerHealth ph = player.GetComponent<PlayerHealth>();
+            if (ph != null)
+            {
+                ph.PlayerDamage(5);
             }
         }
     }

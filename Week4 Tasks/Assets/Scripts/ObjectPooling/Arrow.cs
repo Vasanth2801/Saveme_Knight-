@@ -16,7 +16,11 @@ public class Arrow : MonoBehaviour
     void OnEnable()
     {
         Timer = lifeTime;
-        rb.linearVelocity = transform.right * speed;
+
+        if(rb != null)
+        {
+            rb.linearVelocity = transform.right * speed;
+        }
     }
 
     void Update()
@@ -37,6 +41,7 @@ public class Arrow : MonoBehaviour
             {
                 enemyHealth.TakeDamage(5);
             }
+            gameObject.SetActive(false);
         }
         
         if(other.gameObject.CompareTag("Boss"))
@@ -46,8 +51,7 @@ public class Arrow : MonoBehaviour
             {
                 bossHealth.BossTakeDamge(5);
             }
+            gameObject.SetActive(false);
         }
-
-        gameObject.SetActive(false);
     }
 }

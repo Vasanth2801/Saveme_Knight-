@@ -6,9 +6,7 @@ public class PlayerMovement : MonoBehaviour
 {
     [Header("Movement Settings")]
     public float speed = 5f;
-    [SerializeField] private float minSpeed = 1f;
     [SerializeField] private int facingDirection = 1;
-    private float baseSpeed;
 
     [Header("Reference Settings")]
     Rigidbody2D rb;
@@ -39,24 +37,6 @@ public class PlayerMovement : MonoBehaviour
     [Header("Powerup Settings")]
     public DamagePowerup powerupEffect;
 
-    [Header("RangedSettings")]
-    [SerializeField] Transform firePoint;
-    [SerializeField] int rangedAttackDamage = 5;
-
-    [Header("Player Stamina Settings")]
-    [SerializeField] private float maxStamina = 100f;
-    [SerializeField] float currentStamina;
-    [SerializeField] Slider staminaBar;
-    [SerializeField] float runCost = 10f;
-    [SerializeField] float staminaRegenRate = 5f;
-
-    [Header("Shield Settings")]
-    [SerializeField] bool isShielded = false;
-    [SerializeField] GameObject shieldObject;
-    [SerializeField] float ShieldDuration = 1f;
-    [SerializeField] float shieldCoolDown = 5f;
-    [SerializeField] bool canShield = true;
-
     void Awake()
     { 
         rb = GetComponent<Rigidbody2D>();
@@ -64,13 +44,9 @@ public class PlayerMovement : MonoBehaviour
         controller = new PlayerController();
         MovementCalling();
         Dashing();
-
-      
-        baseSpeed = speed;
-
-        currentStamina = maxStamina;
-        staminaBar.value = currentStamina / maxStamina;
     }
+
+   
 
     void MovementCalling()
     {
@@ -84,6 +60,7 @@ public class PlayerMovement : MonoBehaviour
         {
             Debug.Log("Button Pressed");
         };
+        
     }
 
     private void OnEnable()
@@ -98,24 +75,15 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        
         if (movement.x > 0 && transform.localScale.x < 0 || movement.x < 0 && transform.localScale.x > 0)
         {
             Flip();
         }
 
-        if(Input.GetKeyDown(KeyCode.LeftControl))
+        if(Input.GetKeyDown(KeyCode.LeftShift))
         {
             ActivateCurrentPower();
-        }
-
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            Shoot();
-        }
-
-        if(canShield && !isShielded)
-        {
-            CheckShield();
         }
     }
 
@@ -128,27 +96,12 @@ public class PlayerMovement : MonoBehaviour
          Move();
          Attack();
 
-        if((canDash == true && dashPressed == true) && currentStamina >= 0)
+        if(canDash == true && dashPressed == true)
         {
             dashPressed = false;
             StartCoroutine(Dash());
             Debug.Log("Started Dashing");
         }
-    }
-
-    void CheckShield()
-    {
-        if(Input.GetKeyDown(KeyCode.LeftShift))
-        {
-            shieldObject.SetActive(true);
-            isShielded = true;
-            NoShield();
-        }
-    }
-
-    void NoShield()
-    {
-        StartCoroutine(ShieldTime());
     }
 
     private void Move()
@@ -157,28 +110,8 @@ public class PlayerMovement : MonoBehaviour
         rb.MovePosition(move);
         animator.SetFloat("Horizontal", movement.x);
         animator.SetFloat("Horizontal", movement.y);
+
         animator.SetFloat("Horizontal", movement.sqrMagnitude);
-        currentStamina -= movement.sqrMagnitude * runCost * Time.deltaTime;
-
-        if(currentStamina <= 0f)
-        {
-            currentStamina = 0f;
-            speed = minSpeed;
-        }
-        else
-        {
-            if (speed < baseSpeed)
-            {
-                speed = baseSpeed;
-            }
-        }
-
-        staminaBar.value = currentStamina / maxStamina;
-
-        if(currentStamina < maxStamina && movement.sqrMagnitude == 0)
-        {
-            StartCoroutine(RegenerateStamina());
-        }
     }
 
     void Attack()
@@ -188,14 +121,8 @@ public class PlayerMovement : MonoBehaviour
             animator.SetTrigger("Attack");
             Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayer);
 
-            foreach(Collider2D hit in hitEnemies)
+            foreach (Collider2D hit in hitEnemies)
             {
-                if(isShielded)
-                {
-                    Debug.Log("Player is shielded, no damage taken");
-                    return;
-                }
-
                 var eh = hit.GetComponent<EnemyHealth>();
                 if (eh != null)
                 {
@@ -213,19 +140,10 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void  Shoot()
-    {
-        ObjectPooler.Instance.SpawnObjects("Projectile", firePoint.position, firePoint.rotation);
-    }
-
     void Flip()
     {
         facingDirection *= -1;
         transform.localScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, transform.localScale.z);
-        if(firePoint != null)
-        {
-            firePoint.Rotate(0, 180, 0);
-        }
     }
 
     IEnumerator Dash()
@@ -264,7 +182,7 @@ public class PlayerMovement : MonoBehaviour
     IEnumerator KnockBackRoutine(Vector2 hitDirection)
     {
         isKnocked = true;
-        rb.linearVelocity = movement.normalized * knockBackForce;
+        rb.linearVelocity = hitDirection.normalized * knockBackForce;
         yield return new WaitForSeconds(knockBackDuration);
         rb.linearVelocity = Vector2.zero;
         isKnocked = false;
@@ -304,30 +222,5 @@ public class PlayerMovement : MonoBehaviour
             ApplyPowerup(powerupEffect);
             powerupEffect = null;
         }
-    }
-
-    IEnumerator RegenerateStamina()
-    {
-       yield return new WaitForSeconds(1f);
-        if(currentStamina < maxStamina)
-        {
-            currentStamina += staminaRegenRate / 10f;
-            if(currentStamina > maxStamina)
-            {
-                currentStamina = maxStamina;
-            }
-            staminaBar.value = currentStamina / maxStamina;
-            yield return new WaitForSeconds(0.1f);
-        }
-    }
-
-    IEnumerator ShieldTime()
-    {
-        yield return new WaitForSeconds(ShieldDuration);
-        shieldObject.SetActive(false);
-        isShielded = false;
-        canShield = false;
-        yield return new WaitForSeconds(shieldCoolDown);
-        canShield = true;
     }
 }
