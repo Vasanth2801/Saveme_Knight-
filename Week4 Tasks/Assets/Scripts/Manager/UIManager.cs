@@ -65,8 +65,8 @@ public class UIManager : MonoBehaviour
 
     public void AddKill()
     {
-        currency++;
-        DataManager.instance.enemyState.killCount += 1;
+        currency += 10;
+        DataManager.instance.enemyState.killCount += 10;
         UpdateUI();
     }
 
@@ -81,7 +81,7 @@ public class UIManager : MonoBehaviour
 
     void UpdateUI()
     {
-        currencyText.text = "KillCount: " + currency.ToString();
+        currencyText.text = "Currency: " + currency.ToString();
     }
 
     public void SaveData()
@@ -119,7 +119,7 @@ public class UIManager : MonoBehaviour
 
     public void Restart()
     {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(2);
         Time.timeScale = 1f;
     }
 

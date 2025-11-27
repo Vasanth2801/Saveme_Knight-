@@ -29,7 +29,7 @@ public class Enemy : MonoBehaviour
 
     private void Update()
     {
-        if (player == null) 
+        if(player == null) 
         { 
             return; 
         }
@@ -83,7 +83,7 @@ public class Enemy : MonoBehaviour
 
         while (true)
         {
-            if (player == null)
+            if(player == null)
             {
                 break;
             }
