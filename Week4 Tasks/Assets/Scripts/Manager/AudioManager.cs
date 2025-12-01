@@ -4,6 +4,7 @@ using UnityEngine;
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager Instance;
+
     [Header("Audio Sources")]
     [SerializeField] private AudioSource musicSource;
     [SerializeField] private AudioSource sfxSource;
@@ -16,12 +17,12 @@ public class AudioManager : MonoBehaviour
     public  AudioClip hit;
     public  AudioClip Attack;
     public  AudioClip win;
-    public AudioClip gameOver;
-    public AudioClip speed;
-    public AudioClip DamageBuff;
+    public  AudioClip gameOver;
+    public  AudioClip speed;
+    public  AudioClip DamageBuff;
     public  AudioClip shield;
-    public AudioClip pause;
-    public AudioClip resume;
+    public  AudioClip pause;
+    public  AudioClip resume;
 
     void Awake()
     {

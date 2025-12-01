@@ -60,7 +60,7 @@ public class Enemy : MonoBehaviour
 
         if(isChasing == true)
         {
-               Chase();
+            Chase();
         }
     }
 
