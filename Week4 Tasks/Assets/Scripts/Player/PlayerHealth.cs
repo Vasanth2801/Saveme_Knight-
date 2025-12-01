@@ -27,16 +27,22 @@ public class PlayerHealth : MonoBehaviour
         currentHealth = Mathf.Max(currentHealth, 0);
 
         if (playerSlider != null)
+        {
             playerSlider.value = currentHealth;
+        }
 
         Debug.Log($"PlayerDamage {gameObject.name} dmg={damage} cur={currentHealth}");
 
         if (currentHealth <= 0)
         {
             if (AudioManager.Instance != null)
+            {
                 AudioManager.Instance.PlayDeath();
+            }
             else
+            {
                 Debug.LogWarning("PlayerHealth: AudioManager.Instance is null");
+            }
 
             currentHealth = 0;
 

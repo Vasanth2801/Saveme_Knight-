@@ -22,6 +22,5 @@ public class WInManager : MonoBehaviour
         winUI.SetActive(true);
         bgPanel.SetActive(true);
         AudioManager.Instance.PlayWin();
-        Time.timeScale = 0f;
     }
 }
