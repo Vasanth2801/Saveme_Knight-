@@ -135,7 +135,6 @@ public class UIManager : MonoBehaviour
     {
         gameOverMenu.SetActive(true);
         AudioManager.Instance.PlayGameOver();
-        Time.timeScale = 0f;
     }
 
     public void QuitGame()

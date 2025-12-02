@@ -3,7 +3,6 @@ using UnityEngine.Events;
 
 public class Interactor : MonoBehaviour
 {
-
     public bool isRange;
     public UnityEvent interaction;
 

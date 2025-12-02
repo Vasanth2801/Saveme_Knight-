@@ -26,7 +26,7 @@ public class NPC : MonoBehaviour
                 dialoguePanel.SetActive(true);
                 StartCoroutine(Typing());
             }
-            else if (dialogueText.text == dialogue[index])
+            else if(dialogueText.text == dialogue[index])
             {
                 NextLine();
             }

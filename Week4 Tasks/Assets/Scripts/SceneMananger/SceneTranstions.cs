@@ -29,7 +29,7 @@ public class SceneTranstions : MonoBehaviour
         {
             if(collector != null)
             {
-                if(collector.keyCount >= 2)
+                if(collector.keyCount >= 3)
                 {
                     SceneManager.LoadScene(3);
                     yield return new WaitForSeconds(duration);

@@ -4,13 +4,11 @@ using UnityEngine.Rendering;
 public class DayNightCycle : MonoBehaviour
 {
     public Volume ppv;
-
     public float tick;
     public float seconds;
     public float minutes;
     public float hours;
     public float days = 1;
-
     public bool activateLights;
     public GameObject[] lights;
 
@@ -53,7 +51,6 @@ public class DayNightCycle : MonoBehaviour
     {
         if (hours >= 21 && hours <22) 
         {
-
             if (activateLights == false)
             {
                 if (minutes > 45)
@@ -62,12 +59,10 @@ public class DayNightCycle : MonoBehaviour
                     {
                         lights[i].SetActive(true);
                     }
-
                     activateLights = true;
                 }
             }
         }
-
 
         if(hours>=6 && hours <7)
         {
@@ -79,7 +74,6 @@ public class DayNightCycle : MonoBehaviour
                     {
                         lights[i].SetActive(false);
                     }
-
                     activateLights = false;
                 }
             }
