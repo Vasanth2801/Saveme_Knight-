@@ -116,9 +116,8 @@ public class GameManager : MonoBehaviour
         Screen.fullScreen = _isFullScreen;
     }
 
-    public void Quit()
+    public void QuitGame()
     {
         Application.Quit();
-        Debug.Log("Application Quit.....");
     }
 }

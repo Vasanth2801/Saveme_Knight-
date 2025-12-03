@@ -8,7 +8,6 @@ public class NPC : MonoBehaviour
     public TextMeshProUGUI dialogueText;
     public string[] dialogue;
     private int index = 0;
-
     public float wordSpeed;
     public bool playerIsClose;
 

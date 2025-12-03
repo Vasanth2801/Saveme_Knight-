@@ -55,7 +55,9 @@ public class PlayerHealth : MonoBehaviour
                 Debug.LogWarning("PlayerHealth: UIManager.instance is null - GameOver won't be shown");
             }
 
-            Destroy(gameObject);
+            GetComponentInChildren<SpriteRenderer>().enabled = false;
+            GetComponent<Collider2D>().enabled = false;
+            AudioManager.Instance.PlayAttack();
         }
     }
 }
