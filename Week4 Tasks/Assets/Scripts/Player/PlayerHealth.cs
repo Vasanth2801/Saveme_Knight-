@@ -57,7 +57,7 @@ public class PlayerHealth : MonoBehaviour
 
             GetComponentInChildren<SpriteRenderer>().enabled = false;
             GetComponent<Collider2D>().enabled = false;
-            AudioManager.Instance.PlayAttack();
+            GetComponent<PlayerMovement>().enabled = false; 
         }
     }
 }
